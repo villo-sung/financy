@@ -29,10 +29,15 @@ export function Login() {
         toast.success('Login realizado com sucesso!')
 
         navigate('/')
+      } else {
+        toast.error('E-mail ou senha incorretos')
       }
     } catch (error) {
-      console.error(error)
-      toast.error('Erro ao realizar login')
+      if (error instanceof Error) {
+        toast.error('Usuario ou senha incorretos')
+      } else {
+        toast.error('Erro ao realizar login')
+      }
     } finally {
       setLoading(false)
     }

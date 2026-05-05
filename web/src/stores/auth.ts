@@ -42,46 +42,38 @@ export const useAuthStore = create<AuthState>()(
       user: null,
       isAuthenticated: false,
       login: async (data: LoginInput) => {
-        try {
-          const response = await apolloClient.mutate<LoginMutationResponse>({
-            mutation: LOGIN,
-            variables: {
-              data,
-            },
-          });
+        const response = await apolloClient.mutate<LoginMutationResponse>({
+          mutation: LOGIN,
+          variables: {
+            data,
+          },
+        });
 
-          if (response.data?.login) {
-            const { token, refreshToken, user } = response.data.login;
+        if (response.data?.login) {
+          const { token, refreshToken, user } = response.data.login;
 
-            set({ token, refreshToken, user, isAuthenticated: true });
-          }
-
+          set({ token, refreshToken, user, isAuthenticated: true });
           return true;
-        } catch (error) {
-          console.error(error);
-          return false;
         }
+
+        return false;
       },
       signUp: async (data: RegisterInput) => {
-        try {
-          const response = await apolloClient.mutate<RegisterMutationResponse>({
-            mutation: REGISTER,
-            variables: {
-              data,
-            },
-          });
+        const response = await apolloClient.mutate<RegisterMutationResponse>({
+          mutation: REGISTER,
+          variables: {
+            data,
+          },
+        });
 
-          if (response.data?.register) {
-            const { token, refreshToken, user } = response.data.register;
+        if (response.data?.register) {
+          const { token, refreshToken, user } = response.data.register;
 
-            set({ token, refreshToken, user, isAuthenticated: true });
-          }
-
+          set({ token, refreshToken, user, isAuthenticated: true });
           return true;
-        } catch (error) {
-          console.error(error);
-          return false;
         }
+
+        return false;
       },
       setToken: (token: string) => set({ token }),
       setRefreshToken: (refreshToken: string) => set({ refreshToken }),

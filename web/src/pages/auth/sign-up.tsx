@@ -29,10 +29,15 @@ export function SignUp() {
         toast.success('Conta criada com sucesso!')
 
         navigate('/')
+      } else {
+        toast.error('Erro ao realizar cadastro')
       }
     } catch (error) {
-      console.error(error)
-      toast.error('Erro ao realizar cadastro')
+      if (error instanceof Error) {
+        toast.error(error.message)
+      } else {
+        toast.error('Erro ao realizar cadastro')
+      }
     } finally {
       setLoading(false)
     }
