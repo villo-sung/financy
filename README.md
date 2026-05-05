@@ -13,6 +13,8 @@ colocar variáveis no .env seguindo .env.example
   DATABASE_URL=file:./prisma/dev.db
 ```
 
+`npx prisma migrate dev`
+
 `npm run dev`
 
 ================================================
