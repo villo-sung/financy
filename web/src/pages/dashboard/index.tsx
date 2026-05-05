@@ -126,7 +126,7 @@ export function Dashboard() {
                       </div>
                     </TableCell>
 
-                    <TableCell className="text-right">
+                    <TableCell className="text-center">
                       <Badge variant="outline" className={`bg-${transaction.category.color}-light text-${transaction.category.color}-base`}>{transaction.category.title}</Badge>
                     </TableCell>
 
