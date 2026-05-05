@@ -1,0 +1,40 @@
+import { ApolloServer } from "@apollo/server";
+import { expressMiddleware } from "@as-integrations/express5";
+import 'reflect-metadata';
+import express from "express";
+import cors from "cors";
+import { buildSchema } from "type-graphql";
+import { AuthResolver } from "./resolvers/auth.resolver";
+import { UserResolver } from "./resolvers/user.resolver";
+import { buildContext } from "./graphql/context/index";
+import { CategoryResolver } from "./resolvers/category.resolver";
+import { TransactionResolver } from "./resolvers/transaction.resolver";
+import { DashboardResolver } from "./resolvers/dashboard.resolver";
+
+async function bootstrap() {
+  const app = express()
+
+  app.use(cors())
+
+  const schema = await buildSchema({
+    resolvers: [AuthResolver, UserResolver, CategoryResolver, TransactionResolver, DashboardResolver],
+    validate: false,
+    emitSchemaFile: "./schema.graphql",
+  })
+
+  const server = new ApolloServer({
+    schema,
+  })
+
+  await server.start()
+
+  app.use("/graphql", express.json(), expressMiddleware(server, {
+    context: buildContext,
+  }))
+
+  app.listen(4000, () => {
+    console.log("🚀 Server started on port 4000 at http://localhost:4000/graphql")
+  })
+}
+
+bootstrap()
