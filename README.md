@@ -10,7 +10,7 @@ colocar variáveis no .env seguindo .env.example
 
 ```
   JWT_SECRET=super-secret-jwt
-  DATABASE_URL=./prisma/dev.db
+  DATABASE_URL=file:./prisma/dev.db
 ```
 
 `npm run dev`
