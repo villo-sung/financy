@@ -3,7 +3,7 @@ import { setContext } from "@apollo/client/link/context";
 import { ErrorLink, } from "@apollo/client/link/error";
 
 const httpLink = new HttpLink({
-  uri: 'http://localhost:4000/graphql'
+  uri: `${import.meta.env.VITE_BACKEND_URL}/graphql`
 })
 
 const errorLink = new ErrorLink((params) => {
@@ -18,7 +18,7 @@ const errorLink = new ErrorLink((params) => {
 
         if (refreshToken) {
           return new Observable((observer) => {
-            fetch('http://localhost:4000/graphql', {
+            fetch(`${import.meta.env.VITE_BACKEND_URL}/graphql`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
@@ -26,24 +26,24 @@ const errorLink = new ErrorLink((params) => {
                 variables: { token: refreshToken },
               }),
             })
-            .then(res => res.json())
-            .then(res => {
-              const { token, refreshToken: newRefresh } = res.data.refreshToken
-              
-              parsed.state.token = token
-              parsed.state.refreshToken = newRefresh
-              localStorage.setItem('auth-storage', JSON.stringify(parsed))
+              .then(res => res.json())
+              .then(res => {
+                const { token, refreshToken: newRefresh } = res.data.refreshToken
 
-              operation.setContext(({ headers = {} }: any) => ({
-                headers: { ...headers, Authorization: `Bearer ${token}` }
-              }))
+                parsed.state.token = token
+                parsed.state.refreshToken = newRefresh
+                localStorage.setItem('auth-storage', JSON.stringify(parsed))
 
-              forward(operation).subscribe(observer)
-            })
-            .catch(() => {
-              localStorage.removeItem('auth-storage')
-              window.location.href = '/login'
-            })
+                operation.setContext(({ headers = {} }: any) => ({
+                  headers: { ...headers, Authorization: `Bearer ${token}` }
+                }))
+
+                forward(operation).subscribe(observer)
+              })
+              .catch(() => {
+                localStorage.removeItem('auth-storage')
+                window.location.href = '/login'
+              })
           })
         }
 
